@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   
    final spaceHorizontal = SizedBox(height: 10,);
 
+   final formkey = GlobalKey<FormState>();
   
   Widget camera(){
     return ElevatedButton(
@@ -48,19 +49,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
   );
 }
 
+Widget btnvalidator(){
+  return ElevatedButton(
+    child: Text('Registrar'),
+    onPressed: (){
+      bool formvalidate = formkey.currentState!.validate();
+      bool existavatar = avatar!= null;
+      if (formvalidate && existavatar) {
+        print('El formulario se lleno correctamente');
+      }
+    },
+  );
+}
+
   
   final txtNombre = TextFormField(
     decoration: InputDecoration(
       label: Text('Nombre del usuario'),
       border: OutlineInputBorder()
     ),
+    validator: (value) {
+      if (value!.isEmpty) {
+        return 'Debe llenar el campo de nombre';
+      }else{
+        return null;
+      }
+    },
   );
+  
 
    final txtEmail = TextFormField(
     decoration: InputDecoration(
       label: Text('Email User'),
       border: OutlineInputBorder()
     ),
+     validator: (value) {
+      if (value!.isEmpty) {
+        return 'Debe llenar el campo de email del usuario';
+      }else if(EmailValidator.validate(value)){
+        return null;
+      }else{
+        return 'No es una dirección de correo valida';
+      }
+    },
   );
   
   final txtPass = TextFormField(
@@ -68,27 +99,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
       label: Text('Password User'),
       border: OutlineInputBorder()
     ),
+     validator: (value) {
+      if (value!.isEmpty) {
+        return 'Por favor introduzca su password';
+      }else{
+        return null;
+      }
+    },
   );
+
+
   
   Widget form() {
-    return Column(
-      children: [
-         avatar == null
-        ? SizedBox()
-        : Image(
-        height: 200,
-        image: FileImage(obtenerAvatar()!),
-        ),
-        camera(),
-        galey(),
-        txtNombre,
-        spaceHorizontal,
-        txtEmail,
-        spaceHorizontal,
-        txtPass,
-
-
-      ],
+    return Form(
+      key: formkey,
+      child: Column(
+        children: [
+           avatar == null
+          ? SizedBox()
+          : Image(
+          height: 200,
+          image: FileImage(obtenerAvatar()!),
+          ),
+          camera(),
+          galey(),
+          txtNombre,
+          spaceHorizontal,
+          txtEmail,
+          spaceHorizontal,
+          txtPass,
+          spaceHorizontal,
+          btnvalidator()
+        ],
+      ),
     );
   }
 
