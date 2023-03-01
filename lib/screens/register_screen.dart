@@ -8,14 +8,14 @@ class RegisterScreen extends StatefulWidget {
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
-}
+  }
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final ImagePicker pick = ImagePicker();
   XFile? avatar;
 
   File? obtenerAvatar(){
-      if(avatar != null){
+      if(avatar != null){  
         return File(avatar!.path);
       }
       return null;
@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Text('Capturar desde cámara'),
         onPressed: () {
           pick.pickImage(source: ImageSource.camera).then((image){
-              avatar: image;
+              avatar = image;
               setState(() {});
         });
         },
@@ -42,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Text('Capturar desde la galeria'),
         onPressed: () {
         pick.pickImage(source: ImageSource.gallery).then((image){
-          avatar: image;
+          avatar = image;
           setState(() {});
       });
     },
@@ -50,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 Widget btnvalidator(){
+  
   return ElevatedButton(
     child: Text('Registrar'),
     onPressed: (){
@@ -115,14 +116,26 @@ Widget btnvalidator(){
       key: formkey,
       child: Column(
         children: [
+          spaceHorizontal,
+          spaceHorizontal,
            avatar == null
-          ? SizedBox()
-          : Image(
-          height: 200,
-          image: FileImage(obtenerAvatar()!),
+          ? CircleAvatar(
+            radius: 100,
+            child: Icon(
+              Icons.person
+            ),
+          )
+          : CircleAvatar(
+          radius: 100,
+          backgroundImage: FileImage(obtenerAvatar()!),
           ),
+          spaceHorizontal,
+          spaceHorizontal,
+          spaceHorizontal,
           camera(),
+          spaceHorizontal,
           galey(),
+          spaceHorizontal,
           txtNombre,
           spaceHorizontal,
           txtEmail,
